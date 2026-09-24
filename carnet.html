@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Carnet de course — Athlon</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=JetBrains+Mono:wght@500;700&family=Work+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #0A0A0A;
+    --panel: #141414;
+    --panel-line: #232323;
+    --ink: #F2F2F0;
+    --ink-soft: #9A9A96;
+    --dim: #4E4E4B;
+    --accent: #FF4B2B;
+    --font-display: 'Rajdhani', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+    --font-body: 'Work Sans', sans-serif;
+  }
+ 
+  *{ box-sizing: border-box; }
+ 
+  html,body{
+    margin:0;
+    padding:0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+  }
+ 
+  body{
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding: clamp(2rem, 5vw, 4rem) clamp(1.1rem, 4vw, 2rem) 4rem;
+  }
+ 
+  a{ color: inherit; }
+ 
+  .page{ width: 100%; max-width: 900px; }
+ 
+  header.masthead{ text-align:center; margin-bottom: clamp(2.2rem, 5vw, 3rem); }
+  .kicker{
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 0.85rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin: 0 0 0.8rem;
+  }
+  .kicker a{ text-decoration: none; border-bottom: 1px solid var(--dim); }
+  .kicker a:hover{ color: var(--accent); border-bottom-color: var(--accent); }
+ 
+  h1{
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(2.2rem, 6vw, 3.2rem);
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    margin: 0 0 0.6rem;
+  }
+ 
+  .lede{
+    font-size: 1rem;
+    color: var(--ink-soft);
+    max-width: 52ch;
+    margin: 0 auto;
+    line-height: 1.55;
+  }
+ 
+  .race-list{
+    margin-top: clamp(2rem, 5vw, 2.8rem);
+    border: 1px solid var(--panel-line);
+    background: var(--panel);
+  }
+ 
+  .race{
+    padding: 1.2rem 1.4rem;
+    border-top: 1px solid var(--panel-line);
+  }
+  .race:first-child{ border-top: none; }
+ 
+  .race-row{
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem 1.6rem;
+  }
+ 
+  .race-when{
+    flex: none;
+    width: 5.6rem;
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--accent);
+  }
+ 
+  .race-main{ flex: 1 1 220px; min-width: 0; display: flex; flex-direction: column; }
+  .race-name{
+    display: block;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.15rem;
+    letter-spacing: 0.01em;
+    color: var(--ink);
+    line-height: 1.25;
+  }
+  .race-name .unsure{
+    font-family: var(--font-body);
+    font-size: 0.76rem;
+    font-style: italic;
+    color: var(--dim);
+    font-weight: 400;
+  }
+  .race-place{
+    display: block;
+    font-size: 0.82rem;
+    color: var(--ink-soft);
+    margin-top: 0.2rem;
+  }
+ 
+  .race-stats{
+    flex: none;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(56px, 1fr));
+    gap: 0 1.3rem;
+  }
+  .race-stats .s{ text-align: right; }
+  .race-stats .s .v{
+    display:block;
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 0.98rem;
+    color: var(--dim);
+  }
+  .race-stats .s .l{
+    display:block;
+    margin-top: 0.15rem;
+    font-family: var(--font-display);
+    font-size: 0.62rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--dim);
+  }
+ 
+  .race-story{
+    margin: 0.9rem 0 0;
+    padding-top: 0.9rem;
+    border-top: 1px dashed var(--panel-line);
+    font-size: 0.9rem;
+    font-style: italic;
+    color: var(--dim);
+    line-height: 1.5;
+  }
+ 
+  @media (max-width: 640px){
+    .race-row{ flex-direction: column; align-items: flex-start; }
+    .race-when{ width: auto; }
+    .race-stats{ width: 100%; grid-template-columns: repeat(4, 1fr); }
+    .race-stats .s{ text-align: left; }
+  }
+ 
+  .note{
+    margin-top: 1.6rem;
+    font-size: 0.85rem;
+    color: var(--dim);
+    text-align: center;
+    font-style: italic;
+  }
+ 
+  footer.colophon{
+    margin-top: 3rem;
+    text-align:center;
+    font-family: var(--font-display);
+    font-size: 0.78rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--dim);
+  }
+</style>
+</head>
+<body>
+ 
+<div class="page">
+  <header class="masthead">
+    <p class="kicker"><a href="athlon.html">Athlon</a> — sport, trail, running</p>
+    <h1>Carnet de course</h1>
+    <p class="lede">De la plus récente à la première. Les chiffres et les récits se complètent au fil du temps.</p>
+  </header>
+ 
+  <div class="race-list">
+ 
+    <div class="race">
+      <div class="race-row">
+        <span class="race-when">06/2025</span>
+        <span class="race-main">
+          <span class="race-name">Trail de la Haute-Serre <span class="unsure">(nom à confirmer)</span></span>
+          <span class="race-place">Château-Chalons</span>
+        </span>
+        <span class="race-stats">
+          <span class="s"><span class="v">-</span><span class="l">km</span></span>
+          <span class="s"><span class="v">-</span><span class="l">D+</span></span>
+          <span class="s"><span class="v">-</span><span class="l">temps</span></span>
+          <span class="s"><span class="v">-</span><span class="l">classt</span></span>
+        </span>
+      </div>
+      <p class="race-story">Récit à rédiger.</p>
+    </div>
+ 
+    <div class="race">
+      <div class="race-row">
+        <span class="race-when">03/2025</span>
+        <span class="race-main">
+          <span class="race-name">10 km de l'Unicef</span>
+          <span class="race-place">Paris</span>
+        </span>
+        <span class="race-stats">
+          <span class="s"><span class="v">-</span><span class="l">km</span></span>
+          <span class="s"><span class="v">-</span><span class="l">D+</span></span>
+          <span class="s"><span class="v">-</span><span class="l">temps</span></span>
+          <span class="s"><span class="v">-</span><span class="l">classt</span></span>
+        </span>
+      </div>
+      <p class="race-story">Récit à rédiger.</p>
+    </div>
+ 
+    <div class="race">
+      <div class="race-row">
+        <span class="race-when">02/2025</span>
+        <span class="race-main">
+          <span class="race-name">Foulées de l'Assurance</span>
+          <span class="race-place">Paris</span>
+        </span>
+        <span class="race-stats">
+          <span class="s"><span class="v">-</span><span class="l">km</span></span>
+          <span class="s"><span class="v">-</span><span class="l">D+</span></span>
+          <span class="s"><span class="v">-</span><span class="l">temps</span></span>
+          <span class="s"><span class="v">-</span><span class="l">classt</span></span>
+        </span>
+      </div>
+      <p class="race-story">Récit à rédiger.</p>
+    </div>
+ 
+    <div class="race">
+      <div class="race-row">
+        <span class="race-when">02/2025</span>
+        <span class="race-main">
+          <span class="race-name">Trail du Glanum</span>
+          <span class="race-place">Saint-Rémy-de-Provence</span>
+        </span>
+        <span class="race-stats">
+          <span class="s"><span class="v">-</span><span class="l">km</span></span>
+          <span class="s"><span class="v">-</span><span class="l">D+</span></span>
+          <span class="s"><span class="v">-</span><span class="l">temps</span></span>
+          <span class="s"><span class="v">-</span><span class="l">classt</span></span>
+        </span>
+      </div>
+      <p class="race-story">Récit à rédiger.</p>
+    </div>
+ 
+    <div class="race">
+      <div class="race-row">
+        <span class="race-when">12/2024</span>
+        <span class="race-main">
+          <span class="race-name">SaintéLyon 82k</span>
+          <span class="race-place">Saint-Étienne</span>
+        </span>
+        <span class="race-stats">
+          <span class="s"><span class="v">-</span><span class="l">km</span></span>
+          <span class="s"><span class="v">-</span><span class="l">D+</span></span>
+          <span class="s"><span class="v">-</span><span class="l">temps</span></span>
+          <span class="s"><span class="v">-</span><span class="l">classt</span></span>
+        </span>
+      </div>
+      <p class="race-story">Récit à rédiger.</p>
+    </div>
+ 
+    <div class="race">
+      <div class="race-row">
+        <span class="race-when">10/2024</span>
+        <span class="race-main">
+          <span class="race-name">Run in Lyon 10k</span>
+          <span class="race-place">Lyon</span>
+        </span>
+        <span class="race-stats">
+          <span class="s"><span class="v">-</span><span class="l">km</span></span>
+          <span class="s"><span class="v">-</span><span class="l">D+</span></span>
+          <span class="s"><span class="v">-</span><span class="l">temps</span></span>
+          <span class="s"><span class="v">-</span><span class="l">classt</span></span>
+        </span>
+      </div>
+      <p class="race-story">Récit à rédiger.</p>
+    </div>
+ 
+    <div class="race">
+      <div class="race-row">
+        <span class="race-when">05/2024</span>
+        <span class="race-main">
+          <span class="race-name">Raid Hannibal</span>
+          <span class="race-place">Serre-Ponçon</span>
+        </span>
+        <span class="race-stats">
+          <span class="s"><span class="v">-</span><span class="l">km</span></span>
+          <span class="s"><span class="v">-</span><span class="l">D+</span></span>
+          <span class="s"><span class="v">-</span><span class="l">temps</span></span>
+          <span class="s"><span class="v">-</span><span class="l">classt</span></span>
+        </span>
+      </div>
+      <p class="race-story">Récit à rédiger.</p>
+    </div>
+ 
+    <div class="race">
+      <div class="race-row">
+        <span class="race-when">05/2024</span>
+        <span class="race-main">
+          <span class="race-name">Bol d'Air</span>
+          <span class="race-place">Beaujolais</span>
+        </span>
+        <span class="race-stats">
+          <span class="s"><span class="v">-</span><span class="l">km</span></span>
+          <span class="s"><span class="v">-</span><span class="l">D+</span></span>
+          <span class="s"><span class="v">-</span><span class="l">temps</span></span>
+          <span class="s"><span class="v">-</span><span class="l">classt</span></span>
+        </span>
+      </div>
+      <p class="race-story">Récit à rédiger.</p>
+    </div>
+ 
+    <div class="race">
+      <div class="race-row">
+        <span class="race-when">11/2023</span>
+        <span class="race-main">
+          <span class="race-name">Course de l'Escalade</span>
+          <span class="race-place">Genève</span>
+        </span>
+        <span class="race-stats">
+          <span class="s"><span class="v">-</span><span class="l">km</span></span>
+          <span class="s"><span class="v">-</span><span class="l">D+</span></span>
+          <span class="s"><span class="v">-</span><span class="l">temps</span></span>
+          <span class="s"><span class="v">-</span><span class="l">classt</span></span>
+        </span>
+      </div>
+      <p class="race-story">Récit à rédiger.</p>
+    </div>
+ 
+    <div class="race">
+      <div class="race-row">
+        <span class="race-when">05/2023</span>
+        <span class="race-main">
+          <span class="race-name">Raid Hannibal</span>
+          <span class="race-place">Bourg-Saint-Maurice</span>
+        </span>
+        <span class="race-stats">
+          <span class="s"><span class="v">-</span><span class="l">km</span></span>
+          <span class="s"><span class="v">-</span><span class="l">D+</span></span>
+          <span class="s"><span class="v">-</span><span class="l">temps</span></span>
+          <span class="s"><span class="v">-</span><span class="l">classt</span></span>
+        </span>
+      </div>
+      <p class="race-story">Récit à rédiger.</p>
+    </div>
+ 
+    <div class="race">
+      <div class="race-row">
+        <span class="race-when">04/2023</span>
+        <span class="race-main">
+          <span class="race-name">Marathon de Paris</span>
+          <span class="race-place">Paris</span>
+        </span>
+        <span class="race-stats">
+          <span class="s"><span class="v">-</span><span class="l">km</span></span>
+          <span class="s"><span class="v">-</span><span class="l">D+</span></span>
+          <span class="s"><span class="v">-</span><span class="l">temps</span></span>
+          <span class="s"><span class="v">-</span><span class="l">classt</span></span>
+        </span>
+      </div>
+      <p class="race-story">Récit à rédiger.</p>
+    </div>
+ 
+    <div class="race">
+      <div class="race-row">
+        <span class="race-when">09/2022</span>
+        <span class="race-main">
+          <span class="race-name">Semi-marathon ING Route du Vin</span>
+          <span class="race-place">Remich, Luxembourg</span>
+        </span>
+        <span class="race-stats">
+          <span class="s"><span class="v">-</span><span class="l">km</span></span>
+          <span class="s"><span class="v">-</span><span class="l">D+</span></span>
+          <span class="s"><span class="v">-</span><span class="l">temps</span></span>
+          <span class="s"><span class="v">-</span><span class="l">classt</span></span>
+        </span>
+      </div>
+      <p class="race-story">Récit à rédiger.</p>
+    </div>
+ 
+    <div class="race">
+      <div class="race-row">
+        <span class="race-when">06/2022</span>
+        <span class="race-main">
+          <span class="race-name">Maratrail du Saint-Jacques by UTMB</span>
+          <span class="race-place">Le Puy-en-Velay</span>
+        </span>
+        <span class="race-stats">
+          <span class="s"><span class="v">-</span><span class="l">km</span></span>
+          <span class="s"><span class="v">-</span><span class="l">D+</span></span>
+          <span class="s"><span class="v">-</span><span class="l">temps</span></span>
+          <span class="s"><span class="v">-</span><span class="l">classt</span></span>
+        </span>
+      </div>
+      <p class="race-story">Récit à rédiger.</p>
+    </div>
+ 
+    <div class="race">
+      <div class="race-row">
+        <span class="race-when">05/2022</span>
+        <span class="race-main">
+          <span class="race-name">Raid Hannibal</span>
+          <span class="race-place">Briançon</span>
+        </span>
+        <span class="race-stats">
+          <span class="s"><span class="v">-</span><span class="l">km</span></span>
+          <span class="s"><span class="v">-</span><span class="l">D+</span></span>
+          <span class="s"><span class="v">-</span><span class="l">temps</span></span>
+          <span class="s"><span class="v">-</span><span class="l">classt</span></span>
+        </span>
+      </div>
+      <p class="race-story">Récit à rédiger.</p>
+    </div>
+ 
+    <div class="race">
+      <div class="race-row">
+        <span class="race-when">11/2021</span>
+        <span class="race-main">
+          <span class="race-name">Lyon Urban Trail by Night</span>
+          <span class="race-place">Lyon</span>
+        </span>
+        <span class="race-stats">
+          <span class="s"><span class="v">-</span><span class="l">km</span></span>
+          <span class="s"><span class="v">-</span><span class="l">D+</span></span>
+          <span class="s"><span class="v">-</span><span class="l">temps</span></span>
+          <span class="s"><span class="v">-</span><span class="l">classt</span></span>
+        </span>
+      </div>
+      <p class="race-story">Récit à rédiger.</p>
+    </div>
+  </div>
+ 
+  <p class="note">Le journal d'entraînement viendra compléter ce carnet plus tard.</p>
+ 
+  <footer class="colophon">Une facette de l'Atlas des facettes.</footer>
+</div>
+ 
+</body>
+</html>
