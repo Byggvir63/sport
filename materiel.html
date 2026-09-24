@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Matériel — Athlon</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=JetBrains+Mono:wght@500;700&family=Work+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #0A0A0A;
+    --panel: #141414;
+    --panel-raised: #1D1D1D;
+    --panel-line: #232323;
+    --ink: #F2F2F0;
+    --ink-soft: #9A9A96;
+    --dim: #4E4E4B;
+    --accent: #FF4B2B;
+    --accent-soft: rgba(255,75,43,0.16);
+    --radius: 8px;
+    --shadow: 0 14px 34px rgba(0,0,0,0.6);
+    --font-display: 'Rajdhani', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+    --font-body: 'Work Sans', sans-serif;
+  }
+ 
+  *{ box-sizing: border-box; }
+ 
+  html,body{
+    margin:0;
+    padding:0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+  }
+ 
+  body{
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding: clamp(2rem, 5vw, 4rem) clamp(1.1rem, 4vw, 2rem) 4rem;
+  }
+ 
+  a{ color: inherit; }
+ 
+  .page{ width: 100%; max-width: 1080px; }
+ 
+  header.masthead{ text-align:center; margin-bottom: clamp(2rem, 5vw, 3rem); }
+  .kicker{
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 0.85rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin: 0 0 0.8rem;
+  }
+  .kicker a{ text-decoration: none; border-bottom: 1px solid var(--dim); }
+  .kicker a:hover{ color: var(--accent); border-bottom-color: var(--accent); }
+ 
+  h1{
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(2.2rem, 6vw, 3.2rem);
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    margin: 0 0 0.6rem;
+  }
+ 
+  .lede{
+    font-size: 1rem;
+    color: var(--ink-soft);
+    max-width: 52ch;
+    margin: 0 auto;
+    line-height: 1.55;
+  }
+ 
+  .group{ margin-top: 2.4rem; }
+  .group-head{
+    display:flex;
+    align-items: baseline;
+    gap: 0.7rem;
+    border-bottom: 1px solid var(--panel-line);
+    padding-bottom: 0.6rem;
+    margin-bottom: 1.1rem;
+  }
+  .group-head h2{
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.3rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin: 0;
+    color: var(--accent);
+  }
+  .group-head .count{ font-family: var(--font-mono); font-size: 0.78rem; color: var(--dim); }
+ 
+  .gallery{
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+    gap: 1rem;
+  }
+ 
+  .card{
+    background: var(--panel);
+    border: 1px solid var(--panel-line);
+    border-radius: var(--radius);
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+  .card:hover{
+    transform: translateY(-3px);
+    box-shadow: var(--shadow);
+    border-color: rgba(255,75,43,0.5);
+  }
+  .card.shelved{ opacity: 0.6; }
+ 
+  .card-cover{
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 2.2rem;
+    color: var(--dim);
+    background:
+      repeating-linear-gradient(135deg, var(--panel-raised), var(--panel-raised) 10px, var(--panel) 10px, var(--panel) 20px);
+  }
+ 
+  .card-badge{
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    font-family: var(--font-display);
+    font-size: 0.6rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 2px 7px;
+    background: rgba(10,10,10,0.85);
+    border: 1px solid;
+  }
+  .badge-actif{ color: var(--accent); border-color: var(--accent); }
+  .badge-shelved{ color: var(--dim); border-color: var(--panel-line); }
+ 
+  .card-body{ padding: 0.8rem 0.95rem 0.95rem; }
+ 
+  .card-tag{
+    font-family: var(--font-display);
+    font-size: 0.66rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin: 0 0 0.25rem;
+  }
+ 
+  .card-title{
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.08rem;
+    margin: 0 0 0.15rem;
+    color: var(--ink);
+    line-height: 1.2;
+  }
+ 
+  .card-marque{
+    font-size: 0.76rem;
+    color: var(--dim);
+  }
+ 
+  /* --- Modal --- */
+  .overlay{
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.82);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+    z-index: 999;
+  }
+  .overlay.open{ display: flex; }
+ 
+  .modal{
+    position: relative;
+    width: 100%;
+    max-width: 500px;
+    max-height: 86vh;
+    overflow-y: auto;
+    background: var(--panel);
+    border: 1px solid var(--panel-line);
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+  }
+ 
+  .modal-close{
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(0,0,0,0.5);
+    color: var(--ink);
+    border: none;
+    font-size: 1.05rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s ease, color 0.15s ease;
+    z-index: 2;
+  }
+  .modal-close:hover{ background: var(--accent); color: var(--bg); }
+ 
+  .modal-cover{
+    height: 180px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 3rem;
+    color: var(--dim);
+    background:
+      repeating-linear-gradient(135deg, var(--panel-raised), var(--panel-raised) 12px, var(--panel) 12px, var(--panel) 24px);
+  }
+ 
+  .modal-body{ padding: 1.5rem 1.6rem 1.8rem; }
+ 
+  .modal-breadcrumb{
+    font-family: var(--font-display);
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin: 0 0 0.5rem;
+  }
+ 
+  .modal-title{
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.5rem;
+    margin: 0 0 0.4rem;
+  }
+ 
+  .modal-badge{
+    display:inline-block;
+    font-family: var(--font-display);
+    font-size: 0.66rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 3px 9px;
+    border: 1px solid;
+    margin: 0 0 0.9rem;
+  }
+ 
+  .modal-marque{
+    font-size: 0.88rem;
+    color: var(--ink-soft);
+    margin: 0 0 1.1rem;
+  }
+ 
+  .modal-text{
+    font-size: 0.92rem;
+    line-height: 1.6;
+    color: var(--dim);
+    font-style: italic;
+    margin: 0;
+    padding-top: 0.9rem;
+    border-top: 1px dashed var(--panel-line);
+  }
+ 
+  footer.colophon{
+    margin-top: 3rem;
+    text-align:center;
+    font-family: var(--font-display);
+    font-size: 0.78rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--dim);
+  }
+</style>
+</head>
+<body>
+ 
+<div class="page">
+  <header class="masthead">
+    <p class="kicker"><a href="athlon.html">Athlon</a> — sport, trail, running</p>
+    <h1>Matériel</h1>
+    <p class="lede">Tout ce qui équipe l'entraînement et la course, rangé par catégorie. Touchez une fiche pour l'ouvrir.</p>
+  </header>
+ 
+  <div id="gallery-root"></div>
+ 
+  <footer class="colophon">Une facette de l'Atlas des facettes.</footer>
+</div>
+ 
+<div class="overlay" id="overlay">
+  <div class="modal" id="modal">
+    <button class="modal-close" id="modal-close" aria-label="Fermer">✕</button>
+    <div id="modal-content"></div>
+  </div>
+</div>
+ 
+<script>
+  const ITEMS = [
+    { id: "sense-ride-4", categorie: "Chaussures", sousCategorie: "Trail", piece: "Salomon Sense Ride 4", marque: "Salomon", statut: "Au placard" },
+    { id: "speedgoat-5", categorie: "Chaussures", sousCategorie: "Trail", piece: "Hoka Speedgoat 5", marque: "Hoka", statut: "Actif" },
+    { id: "kiprun-kd900x", categorie: "Chaussures", sousCategorie: "Route", piece: "Kiprun KD900 X", marque: "Kiprun", statut: "Actif" },
+    { id: "kiprun-ks900-light", categorie: "Chaussures", sousCategorie: "Route", piece: "Kiprun KS900 Light", marque: "Kiprun", statut: "Actif" },
+    { id: "asics-nimbus-24", categorie: "Chaussures", sousCategorie: "Route", piece: "ASICS Gel Nimbus 24", marque: "ASICS", statut: "Au placard" },
+    { id: "jogflow-500-1k", categorie: "Chaussures", sousCategorie: "Route", piece: "Kalenji Jogflow 500.1K", marque: "Kalenji", statut: "Actif" },
+    { id: "trail-race-4", categorie: "Chaussures", sousCategorie: "Trail", piece: "Kalenji Trail Race 4 (2018)", marque: "Kalenji", statut: "Au placard" },
+ 
+    { id: "sac-trail-salomon", categorie: "Sacs", sousCategorie: "Sac de trail", piece: "Sac de trail ultra", marque: "Salomon", statut: "Actif" },
+ 
+    { id: "batons-tcl", categorie: "Bâtons", sousCategorie: "Télescopiques", piece: "Bâtons télescopiques", marque: "TCL", statut: "Actif" },
+ 
+    { id: "coros-pace-4", categorie: "Montres connectées", sousCategorie: "GPS running", piece: "Coros Pace 4", marque: "Coros", statut: "Actif" },
+    { id: "polar-pacer-pro", categorie: "Montres connectées", sousCategorie: "GPS running", piece: "Polar Pacer Pro", marque: "Polar", statut: "Au placard" },
+ 
+    { id: "jbl-endurance-race-2", categorie: "Écouteurs", sousCategorie: "Intra-auriculaires", piece: "JBL Endurance Race 2", marque: "JBL", statut: "Actif" },
+    { id: "shokz-openswim-pro", categorie: "Écouteurs", sousCategorie: "Conduction osseuse", piece: "Shokz OpenSwim Pro", marque: "Shokz", statut: "Actif" },
+ 
+    { id: "lunettes-salomon-trail", categorie: "Lunettes", sousCategorie: "Solaires trail", piece: "Lunettes solaires de trail", marque: "Salomon", statut: "Actif" },
+    { id: "lunettes-piscine-decathlon", categorie: "Lunettes", sousCategorie: "Natation", piece: "Lunettes de piscine réglables", marque: "Décathlon", statut: "Actif" },
+ 
+    { id: "gravel-triban-120", categorie: "Vélo", sousCategorie: "Gravel", piece: "Gravel Triban 120", marque: "Triban", statut: "Au placard" },
+ 
+    { id: "vetements-running-trail", categorie: "Vêtements de running et trail", sousCategorie: "", piece: "Vêtements de running et trail", marque: "", statut: "À compléter" },
+    { id: "vetements-cyclisme", categorie: "Vêtements de cyclisme", sousCategorie: "", piece: "Vêtements de cyclisme", marque: "", statut: "À compléter" },
+    { id: "vetements-natation", categorie: "Vêtements de natation", sousCategorie: "", piece: "Vêtements de natation", marque: "", statut: "À compléter" }
+  ];
+ 
+  const GROUP_ORDER = [
+    "Chaussures","Sacs","Bâtons","Montres connectées","Écouteurs","Lunettes","Vélo",
+    "Vêtements de running et trail","Vêtements de cyclisme","Vêtements de natation"
+  ];
+ 
+  const root = document.getElementById('gallery-root');
+  const overlay = document.getElementById('overlay');
+  const modalContent = document.getElementById('modal-content');
+ 
+  function initial(str){ return str.trim().charAt(0).toUpperCase(); }
+  function badgeClass(statut){ return statut === "Actif" ? "badge-actif" : "badge-shelved"; }
+ 
+  function renderGallery(){
+    GROUP_ORDER.forEach(cat => {
+      const items = ITEMS.filter(i => i.categorie === cat);
+      if (!items.length) return;
+ 
+      const group = document.createElement('section');
+      group.className = 'group';
+ 
+      const head = document.createElement('div');
+      head.className = 'group-head';
+      head.innerHTML = '<h2>' + cat + '</h2><span class="count">' + items.length + '</span>';
+      group.appendChild(head);
+ 
+      const grid = document.createElement('div');
+      grid.className = 'gallery';
+ 
+      items.forEach(it => {
+        const card = document.createElement('article');
+        card.className = 'card' + (it.statut === 'Au placard' ? ' shelved' : '');
+        card.addEventListener('click', () => openModal(it.id));
+ 
+        const badge = document.createElement('span');
+        badge.className = 'card-badge ' + badgeClass(it.statut);
+        badge.textContent = it.statut;
+        card.appendChild(badge);
+ 
+        const cover = document.createElement('div');
+        cover.className = 'card-cover';
+        cover.textContent = initial(it.piece);
+        card.appendChild(cover);
+ 
+        const body = document.createElement('div');
+        body.className = 'card-body';
+        body.innerHTML =
+          (it.sousCategorie ? '<p class="card-tag">' + it.sousCategorie + '</p>' : '') +
+          '<h3 class="card-title">' + it.piece + '</h3>' +
+          (it.marque ? '<p class="card-marque">' + it.marque + '</p>' : '');
+        card.appendChild(body);
+ 
+        grid.appendChild(card);
+      });
+ 
+      group.appendChild(grid);
+      root.appendChild(group);
+    });
+  }
+ 
+  function openModal(id){
+    const it = ITEMS.find(x => x.id === id);
+    if (!it) return;
+ 
+    let html = '<div class="modal-cover">' + initial(it.piece) + '</div>';
+    html += '<div class="modal-body">';
+    html += '<p class="modal-breadcrumb">' + it.categorie + (it.sousCategorie ? ' — ' + it.sousCategorie : '') + '</p>';
+    html += '<h2 class="modal-title">' + it.piece + '</h2>';
+    html += '<span class="modal-badge ' + badgeClass(it.statut) + '">' + it.statut + '</span>';
+    if (it.marque) html += '<p class="modal-marque">' + it.marque + '</p>';
+    html += '<p class="modal-text">Avis à rédiger.</p>';
+    html += '</div>';
+ 
+    modalContent.innerHTML = html;
+    overlay.classList.add('open');
+  }
+ 
+  function closeModal(){ overlay.classList.remove('open'); }
+ 
+  document.getElementById('modal-close').addEventListener('click', closeModal);
+  overlay.addEventListener('click', (e) => { if (e.target === overlay) closeModal(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+ 
+  renderGallery();
+</script>
+ 
+</body>
+</html>
